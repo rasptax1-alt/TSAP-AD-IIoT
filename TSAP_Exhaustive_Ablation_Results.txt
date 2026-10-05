@@ -1,0 +1,77 @@
+==============================================================================
+ TSAP-AD v2 | EXHAUSTIVE MULTI-FOLD ABLATION MATRIX
+==============================================================================
+XGB params: {'n_estimators': 100, 'max_depth': 3, 'learning_rate': 0.05, 'subsample': 1.0, 'colsample_bytree': 0.6, 'min_child_weight': 1, 'gamma': 0.0, 'reg_lambda': 1.0, 'objective': 'binary:logistic', 'base_score': 0.05168040583386176, 'tree_method': 'hist', 'eval_metric': 'logloss', 'n_jobs': -1, 'random_state': 2026}
+WINDOW=10 STEP=10 BAND_W=2 TARGET_N=3000 SEEDS=[42, 7, 2026]
+
+--- per fold ---
+                                                      F1  F1_std      Acc      Rec     Prec      TN     FP     FN      TP
+Config                                     Fold                                                                          
+Proposed Hybrid (XGB + DTW)                1     0.00000     0.0  1.00000  0.00000  0.00000  1042.0    0.0    0.0     0.0
+                                           2     0.00000     0.0  0.84357  0.00000  0.00000   879.0    0.0  163.0     0.0
+                                           3     1.00000     0.0  1.00000  1.00000  1.00000     0.0    0.0    0.0  1042.0
+Rule-based DTW threshold                   1     0.00000     0.0  0.50576  0.00000  0.00000   527.0  515.0    0.0     0.0
+                                           2     0.28902     0.0  0.52783  0.61350  0.18904   450.0  429.0   63.0   100.0
+                                           3     0.83380     0.0  0.71497  0.71497  1.00000     0.0    0.0  297.0   745.0
+Standalone XGB (no temporal feature)       1     0.00000     0.0  1.00000  0.00000  0.00000  1042.0    0.0    0.0     0.0
+                                           2     0.00000     0.0  0.84357  0.00000  0.00000   879.0    0.0  163.0     0.0
+                                           3     1.00000     0.0  1.00000  1.00000  1.00000     0.0    0.0    0.0  1042.0
+XGB + rolling-statistics temporal ablation 1     0.00000     0.0  1.00000  0.00000  0.00000  1042.0    0.0    0.0     0.0
+                                           2     0.00000     0.0  0.84357  0.00000  0.00000   879.0    0.0  163.0     0.0
+                                           3     1.00000     0.0  1.00000  1.00000  1.00000     0.0    0.0    0.0  1042.0
+
+--- aggregates ---
+                                            F1_mean   F1_std  Acc_mean  Rec_mean  Prec_mean  FN_sum    FN_mean  FP_sum    FP_mean
+Config                                                                                                                           
+Proposed Hybrid (XGB + DTW)                 0.33333  0.50000   0.94786   0.33333    0.33333     489   54.33333       0    0.00000
+Rule-based DTW threshold                    0.37427  0.36666   0.58285   0.44282    0.39635    1080  120.00000    2832  314.66667
+Standalone XGB (no temporal feature)        0.33333  0.50000   0.94786   0.33333    0.33333     489   54.33333       0    0.00000
+XGB + rolling-statistics temporal ablation  0.33333  0.50000   0.94786   0.33333    0.33333     489   54.33333       0    0.00000
+
+--- explanations ---
+      Q_expert_A  Q_derived_A  spearman_vs_treeshap  topk_jaccard_vs_treeshap  deletion_fidelity_SNDA  deletion_fidelity_treeshap  efficiency_residual  stability_L1_rel
+Seed                                                                                                                                                                    
+7         0.0748       0.1148                0.2261                    0.7437                  0.1611                      0.3099               0.2336            0.0430
+42        0.0748       0.1149                0.2563                    0.7437                  0.1636                      0.3105               0.2337            0.0393
+2026      0.0748       0.1149                0.2404                    0.7437                  0.1613                      0.3106               0.2336            0.0418
+
+--- drift ---
+   Seed  Fold   mean_KS    max_KS  mean_Wasserstein  mean_PSI    max_PSI  delta_prior
+0    42     1  0.012369  0.264561      1.917669e+06  0.091512   4.000200      0.00000
+1    42     2  0.040773  0.322668      5.118477e+06  0.108130   3.996557      0.15643
+2    42     3  0.221508  0.940393      3.538628e+07  2.203164  14.266413      0.94832
+3     7     1  0.012369  0.264561      1.917669e+06  0.091512   4.000200      0.00000
+4     7     2  0.040773  0.322668      5.118477e+06  0.108130   3.996557      0.15643
+5     7     3  0.221508  0.940393      3.538628e+07  2.203164  14.266413      0.94832
+6  2026     1  0.012369  0.264561      1.917669e+06  0.091512   4.000200      0.00000
+7  2026     2  0.040773  0.322668      5.118477e+06  0.108130   3.996557      0.15643
+8  2026     3  0.221508  0.940393      3.538628e+07  2.203164  14.266413      0.94832
+
+--- paired stats ---
+{
+  "delta_f1_mean_A_minus_B": 0.0,
+  "delta_f1_std_A_minus_B": 0.0,
+  "delta_f1_min": 0.0,
+  "delta_f1_max": 0.0,
+  "n_pairs": 9,
+  "n_folds_A_better": 0,
+  "n_folds_tied": 9,
+  "n_folds_B_better": 0,
+  "wilcoxon_stat": NaN,
+  "wilcoxon_p": 1.0,
+  "delta_f1_ci95_low": 0.0,
+  "delta_f1_ci95_high": 0.0,
+  "bootstrap_resamples": 2000
+}
+
+--- timing ---
+{
+  "window_assembly_ms": 0.0073,
+  "dtw_ms": 0.0015,
+  "xgboost_ms": 0.0021,
+  "attribution_ms": 15.9394,
+  "total_ms": 15.9503,
+  "windows_per_second": 62.7,
+  "packets_per_second_upper_bound": 626.9,
+  "note": "packets/s assumes non-overlapping advancement (STEP == WINDOW)"
+}
